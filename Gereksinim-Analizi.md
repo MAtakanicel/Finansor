@@ -6,12 +6,12 @@
     3.Gelirleri girme
     4.Aboneliklerin takibi
     5.Fatura ve ödemelerin takibi
-    6.Bütçe oluşturma ve yönetimi
+    6.Bütçe oluşturma
     7.Harcama kategorileri oluşturma
     8.Birikim Hedefi koyma
     9.Gider senaryosu oluşturma
-    10.Çoklu para birimi desteği
-    11.Hatırlatıcı desteği
+    10.Bütçe düzenleme
+    11.Hatırlatıcı oluşturma
     12.Periyodik gelir/gider karşılaştırması
 
 
