@@ -12,7 +12,7 @@
     9.Gider senaryosu oluşturma
     10.Çoklu para birimi desteği
     11.İcloud senkronizasyonu ve veri yedekleme
-    12.GÜvenlik ve veri koruma(faceID)
+    12.Güvenlik ve veri koruma(faceID)
     13.Hatırlatıcı desteği
     14.Periyodik gelir/gider karşılaştırması
 
@@ -24,4 +24,3 @@
     4.Otomatik ödeme
 
 ## [Gereksinim Açıklamaları](Gereksinim-Açiklama.md)
-    
