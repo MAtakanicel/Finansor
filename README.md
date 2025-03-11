@@ -23,11 +23,9 @@
     Mehmet Atakan İçel
 
 
-1.[Proje Planı](Proje-Plani.md) <br>
-2.[Gereksinim Analizi](Gereksinim-Analizi.md) <br>
-3.[Durum Diyagram](Durum-Diyagramlari.md) <br>
-4.[Durum Senaryoları](Durum-Senaryolari.md) <br>
-5.[Veritabanı Diyagramı](Veritabani-Diyagrami.md) <br>
-6.[Front-End](Front-End.md) <br>
-7.[Geliştirici ve Kullanıcı Dökümantasyonları](Dokumantasyon.md) <br>
-8.[Sunum](Sunum.md)
+1.[Gereksinim Analizi](Gereksinim-Analizi.md) <br>
+2.[Durum Diyagram](Durum-Diyagramlari.md) <br>
+3.[Durum Senaryoları](Durum-Senaryolari.md) <br>
+5.[Front-End](Front-End.md) <br>
+6.[Back-End](Back-End.md) <br>
+6.[Sunum](Sunum.md) <br>
