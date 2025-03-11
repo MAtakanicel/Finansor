@@ -23,3 +23,5 @@
     3.Fiş veya fatura tarama
     4.Otomatik ödeme
 
+## [Gereksinim Açıklamaları](Gereksinim-Açiklama.md)
+    

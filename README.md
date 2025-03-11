@@ -29,6 +29,5 @@
 4.[Durum Senaryoları](Durum-Senaryolari.md) <br>
 5.[Veritabanı Diyagramı](Veritabani-Diyagrami.md) <br>
 6.[Front-End](Front-End.md) <br>
-7.[Back-End](Back-End.md) <br>
-8.[Test](Test.md) <br>
-9.[Geliştirici ve Kullanıcı Dökümantasyonları](Dokumantasyon.md) <br>
+7.[Geliştirici ve Kullanıcı Dökümantasyonları](Dokumantasyon.md) <br>
+8.[Sunum](Sunum.md)
