@@ -31,6 +31,4 @@
 
     4.İcloud senkronizasyonu: Kullanıcılar, kullanmış oldukları icloud hesabı ile uygulamayı senkronize edebilirler. Bu sayede verileri ekstra bir yedeklemeye sahip olur, aynı zamanda hesapları da icloud'a eklenmiş olur.
 
-    5.Güvenlik(FaceID): Kullanıcılar hesaplarına erişim yapmak için biyometrik verilerini kullanabilir.
-
-    6.Gider senaryosu oluşturma: Kullanıcılar farklı harcama senaryoları oluşturarak giderleri ve harcamalarnı düzenleyerek daha düzgün bir şekilde yönetebilir.
+    5.Gider senaryosu oluşturma: Kullanıcılar farklı harcama senaryoları oluşturarak giderleri ve harcamalarnı düzenleyerek daha düzgün bir şekilde yönetebilir.
