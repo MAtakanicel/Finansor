@@ -1,1 +1,1 @@
-[Durum Senaryosu](UseCase.pdf)
+[Durum Senaryosu](UseCase.pdf)!
