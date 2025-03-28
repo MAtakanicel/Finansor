@@ -1,1 +1,0 @@
-[Durum Senaryosu](UseCase.pdf)!

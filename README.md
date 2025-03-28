@@ -25,7 +25,7 @@
 
 1.[Gereksinim Analizi](Gereksinim-Analizi.md) <br>
 2.[Durum Diyagram](Durum-Diyagrami.md) <br>
-3.[Durum Senaryoları](Durum-Senaryolari.md) <br>
+3.[Durum Senaryoları](DurumSenaryolari.md) <br>
 4.[Front-End](Front-End.md) <br>
 5.[Back-End](Back-End.md) <br>
 6.[Sunum](Sunum.md) <br>
