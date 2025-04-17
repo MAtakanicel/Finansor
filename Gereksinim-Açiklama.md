@@ -1,4 +1,4 @@
-## Mutlak Gereksinimler
+S## Mutlak Gereksinimler
     1.Üye Olma: Kullanıcıların uygulamayı kullanabilmesi öncelikle için e-posta ve belirledikleri bir şifre ile bir hesap oluşturması gereklidir. Hesap oluşturmak, uygulamayı kullanmak için en önemli adımdır.
 
     2.Giriş Yapma: Kullanıcıların oluşturmuş oldukları hesaplarına giriş yaparak, uygulama deneyimine devam edebilirler.

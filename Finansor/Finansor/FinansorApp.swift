@@ -11,7 +11,8 @@ import SwiftUI
 struct FinansorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WelcomeView()
+                .preferredColorScheme(.dark)
         }
     }
 }
