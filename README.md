@@ -20,6 +20,6 @@
 
 1.[Gereksinim Analizi](Docs/Gereksinim-Analizi.md) <br>
 2.[Durum Diyagram](Docs/Durum-Diyagrami.md) <br>
-3.[Durum Senaryoları](Docs/DurumSenaryolari.md) <br>
+3.[Durum Senaryoları](Docs/UseCase.pdf) <br>
 
 
