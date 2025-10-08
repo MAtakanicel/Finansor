@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct CustomTextFieldStyle: TextFieldStyle {
+struct ComponentsTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .padding()
@@ -18,7 +18,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
     }
 }
 
-struct StepIndicator: View {
+struct ComponentsStepIndicator: View {
     var currentStep: Int
     var totalSteps: Int = 3
     
@@ -33,7 +33,7 @@ struct StepIndicator: View {
     }
 }
 
-struct CustomButtonStyle: ButtonStyle {
+struct ComponentsButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding()
@@ -65,9 +65,9 @@ struct CustomButtonStyle: ButtonStyle {
 #Preview {
     VStack(spacing: 20) {
         TextField("Test Field", text: .constant(""))
-            .textFieldStyle(CustomTextFieldStyle())
+            .textFieldStyle(ComponentsTextFieldStyle())
         
-        StepIndicator(currentStep: 3)
+        ComponentsStepIndicator(currentStep: 3)
     }
     .padding()
     .background(AppColors.backgroundDark)
@@ -76,7 +76,7 @@ struct CustomButtonStyle: ButtonStyle {
         
         Button(action: {}){
             Text("Test Button")
-                .buttonStyle(CustomButtonStyle())
+                .buttonStyle(ComponentsButtonStyle())
             
         }
                     

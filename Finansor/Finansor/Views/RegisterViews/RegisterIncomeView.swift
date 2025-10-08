@@ -19,7 +19,7 @@ struct RegisterIncomeView: View {
     
     var body: some View {
         ZStack {
-            AppColors.backgroundDark.ignoresSafeArea()
+            FinansorColors.BackwardCompatibility.backgroundDarkBlue.ignoresSafeArea()
             
             VStack(spacing: 20) {
                 // Geri butonu ve adım göstergesi
@@ -35,7 +35,7 @@ struct RegisterIncomeView: View {
                     Spacer()
                     
                     // Adım göstergesi
-                    StepIndicator(currentStep: currentStep)
+                    StepIndicatorView(currentStep: currentStep)
                     
                     Spacer()
                     
@@ -164,7 +164,7 @@ struct RegisterOptionsMenu: View {
     
     var body: some View {
         ZStack {
-            Color.backgroundDarkBlue.ignoresSafeArea()
+            FinansorColors.BackwardCompatibility.backgroundDarkBlue.ignoresSafeArea()
             
             VStack(spacing: 15) {
                 Text("Kaydını tamamla")

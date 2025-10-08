@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BudgetRow: View {
+struct BudgetRowDetail: View {
     var budget: Budget
     var editAction: () -> Void
     var deleteAction: () -> Void
@@ -141,7 +141,7 @@ struct BudgetRow_Previews: PreviewProvider {
         ZStack {
             AppColors.backgroundDark.ignoresSafeArea()
             
-            BudgetRow(
+            BudgetRowDetail(
                 budget: Budget(
                     id: UUID(),
                     name: "Aylık Yemek Bütçesi",

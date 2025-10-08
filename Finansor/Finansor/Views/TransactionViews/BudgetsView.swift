@@ -250,7 +250,7 @@ struct BudgetsView: View {
                     
                     // Bütçe Listesi
                     ForEach(budgets) { budget in
-                        BudgetRow(budget: budget, editAction: {
+                        BudgetRowDetail(budget: budget, editAction: {
                             editBudget = budget
                         }, deleteAction: {
                             budgetToDelete = budget

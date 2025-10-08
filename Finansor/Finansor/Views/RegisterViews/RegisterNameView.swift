@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RegisterNameView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var userViewModel: UserViewModel
     @State private var name = ""
     @State private var showRegisterBirthdayView = false
     @State private var currentStep = 1
@@ -12,7 +13,7 @@ struct RegisterNameView: View {
     
     var body: some View {
         ZStack {
-            AppColors.backgroundDark.ignoresSafeArea()
+            FinansorColors.backgroundDark.ignoresSafeArea()
             
             VStack(spacing: 20) {
                 // Üst kısım - Geri butonu ve adım göstergesi
@@ -25,12 +26,13 @@ struct RegisterNameView: View {
                     }
                     .fullScreenCover(isPresented: $showWelcomeView, content: {
                         WelcomeView()
+                            .environmentObject(userViewModel)
                     })
                     
                     Spacer()
                     
                     // Adım göstergesi
-                    StepIndicator(currentStep: currentStep)
+                    StepIndicatorView(currentStep: currentStep)
                     
                     Spacer()
                     
@@ -86,14 +88,14 @@ struct RegisterNameView: View {
                 Spacer()
                 
                 Button(action: {
-                    if currentStep < AppConstants.totalRegistrationSteps {
+                    if currentStep < 5 {
                         currentStep += 1
                         showRegisterBirthdayView = true
                     }
                 }) {
                     ZStack {
                         Circle()
-                            .fill(!name.isEmpty ? AppColors.accentYellow : Color.gray.opacity(0.5))
+                            .fill(!name.isEmpty ? FinansorColors.accentYellow : Color.gray.opacity(0.5))
                             .frame(width: 60, height: 60)
                         
                         Image(systemName: "arrow.right")
@@ -127,4 +129,5 @@ struct RegisterNameView: View {
 
 #Preview {
     RegisterNameView()
+        .environmentObject(UserViewModel())
 }

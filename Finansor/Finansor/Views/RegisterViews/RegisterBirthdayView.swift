@@ -26,7 +26,7 @@ struct RegisterBirthdayView: View {
                     Spacer()
                     
                     // Adım göstergesi
-                    StepIndicator(currentStep: currentStep)
+                    StepIndicatorView(currentStep: currentStep)
                     
                     Spacer()
                     
@@ -57,7 +57,7 @@ struct RegisterBirthdayView: View {
                     .datePickerStyle(.wheel)
                     .labelsHidden()
                     .colorScheme(.dark)
-                    .accentColor(.buttonlightGreen)
+                    .accentColor(FinansorColors.BackwardCompatibility.buttonlightGreen)
                     .frame(height: 200)
                     .padding(.horizontal)
                 

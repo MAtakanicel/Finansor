@@ -1,62 +1,69 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var selectedTab = 0
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @EnvironmentObject private var transactionViewModel: TransactionViewModel
+    @EnvironmentObject private var budgetViewModel: BudgetViewModel
+    @EnvironmentObject private var analysisViewModel: AnalysisViewModel
+    
+    @State private var selectedTab: Int = 0
     
     var body: some View {
         TabView(selection: $selectedTab) {
-           
-                HomeTabView()
-            .tabItem {
-                Image(systemName: "house.fill")
-                Text("Ana Sayfa")
-            }
-            .tag(0)
+            // Home Tab
+            HomeTabView()
+                .environmentObject(userViewModel)
+                .environmentObject(transactionViewModel)
+                .environmentObject(budgetViewModel)
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Ana Sayfa")
+                }
+                .tag(0)
             
-                TransactionTabView()
-            .tabItem {
-                Image(systemName: "arrow.left.arrow.right")
-                Text("İşlemler")
-            }
-            .tag(1)
-                
-                CameraTabView()
-            .tabItem {
-                Image(systemName: "camera.fill")
-            }.tag(2)
+            // Transactions Tab
+            Text("İşlemler")
+                .tabItem {
+                    Image(systemName: "arrow.left.arrow.right")
+                    Text("İşlemler")
+                }
+                .tag(1)
             
-                AnalysisTabView()
-            .tabItem {
-                Image(systemName: "doc.text.magnifyingglass")
-                Text("Analiz")
-            }
-            .tag(3)
+            // Analysis Tab
+            AnalysisTabView()
+                .environmentObject(analysisViewModel)
+                .tabItem {
+                    Image(systemName: "chart.pie.fill")
+                    Text("Analiz")
+                }
+                .tag(2)
             
-                SettingsTabView()
-            .tabItem {
-                Image(systemName: "gearshape.fill")
-                Text("Ayarlar")
-            }
-            .tag(4)
+            // Budget Tab
+            Text("Bütçe")
+                .tabItem {
+                    Image(systemName: "banknote.fill")
+                    Text("Bütçe")
+                }
+                .tag(3)
             
-          
-            
+            // Profile Tab
+            Text("Profil")
+                .tabItem {
+                    Image(systemName: "person.fill")
+                    Text("Profil")
+                }
+                .tag(4)
         }
-        .accentColor(AppColors.accentYellow)
+        .accentColor(FinansorColors.buttonLightBlue)
         .onAppear {
-            // Tab bar görünümünü özelleştir
+            // Set tab bar appearance
             let appearance = UITabBarAppearance()
-            appearance.backgroundColor = UIColor(AppColors.backgroundDark)
+            appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+            appearance.backgroundColor = UIColor(Color.black.opacity(0.8))
             
-            // Seçili olmayan tab'ların rengini ayarla
-            appearance.stackedLayoutAppearance.normal.iconColor = UIColor.gray
-            appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.gray]
-            
-            // Seçili tab'ın rengini ayarla
-            appearance.stackedLayoutAppearance.selected.iconColor = UIColor(AppColors.accentYellow)
-            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor(AppColors.accentYellow)]
-            
+            // Use this appearance when scrolling behind the TabView
             UITabBar.appearance().standardAppearance = appearance
+            // Use this appearance when scrolled all the way up
             if #available(iOS 15.0, *) {
                 UITabBar.appearance().scrollEdgeAppearance = appearance
             }
@@ -66,4 +73,11 @@ struct MainTabView: View {
 
 #Preview {
     MainTabView()
+        .environmentObject(UserViewModel())
+        .environmentObject(TransactionViewModel(categoryViewModel: CategoryViewModel()))
+        .environmentObject(BudgetViewModel(transactionViewModel: TransactionViewModel(categoryViewModel: CategoryViewModel())))
+        .environmentObject(AnalysisViewModel(
+            transactionViewModel: TransactionViewModel(categoryViewModel: CategoryViewModel()),
+            categoryViewModel: CategoryViewModel())
+        )
 }

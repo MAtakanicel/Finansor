@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DonutChartView: View {
-    var segments: [ChartSegment]
+    var segments: [AnalysisChartSegment]
     var width: CGFloat = 150
     var innerRadiusFraction: CGFloat = 0.6
     var title: String? = nil
@@ -13,7 +13,7 @@ struct DonutChartView: View {
     }
     
     // Sadece en fazla 5 segmenti gösterip, geri kalanları "Diğer" kategorisinde birleştirir
-    private var processedSegments: [ChartSegment] {
+    private var processedSegments: [AnalysisChartSegment] {
         guard segments.count > 5 else { return segments }
         
         var mainSegments = Array(segments.prefix(4))
@@ -21,7 +21,7 @@ struct DonutChartView: View {
         let otherTotal = otherSegments.reduce(0) { $0 + $1.value }
         
         if otherTotal > 0 {
-            mainSegments.append(ChartSegment(
+            mainSegments.append(AnalysisChartSegment(
                 name: "Diğer",
                 value: otherTotal,
                 color: Color.gray
@@ -59,7 +59,7 @@ struct DonutChartView: View {
                         }
                     }
                     .padding(8)
-                    .background(AppColors.cardDark)
+                    .background(FinansorColors.cardDark)
                     .cornerRadius(width/8)
                 }
             }
@@ -93,7 +93,7 @@ struct DonutChartView: View {
 }
 
 struct DonutSegment: View {
-    var data: [ChartSegment]
+    var data: [AnalysisChartSegment]
     var index: Int
     var innerRadiusFraction: CGFloat
     var total: Double
@@ -156,7 +156,7 @@ struct DonutSegment: View {
 }
 
 struct LegendItem: View {
-    var segment: ChartSegment
+    var segment: AnalysisChartSegment
     var total: Double
     
     private var percentage: Int {
@@ -173,7 +173,7 @@ struct LegendItem: View {
                 Text(segment.name)
                     .font(.caption)
                     .fontWeight(.medium)
-                    .foregroundColor(AppColors.textDark)
+                    .foregroundColor(.white) // AppColors.textDark
                     .lineLimit(1)
                 
                 HStack(spacing: 2) {
@@ -184,7 +184,7 @@ struct LegendItem: View {
                     
                     Text("\(percentage)%")
                         .font(.caption2)
-                        .foregroundColor(AppColors.secondaryTextDark)
+                        .foregroundColor(Color.gray.opacity(0.6)) // AppColors.secondaryTextDark
                 }
             }
         }
@@ -193,25 +193,18 @@ struct LegendItem: View {
     }
 }
 
-struct ChartSegment: Identifiable {
-    var id = UUID()
-    var name: String
-    var value: Double
-    var color: Color
-}
-
 struct DonutChartView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            AppColors.backgroundDark.ignoresSafeArea()
+            Color(red: 0.10, green: 0.15, blue: 0.20).ignoresSafeArea() // Using explicit color instead of ambiguous reference
             
             DonutChartView(
                 segments: [
-                    ChartSegment(name: "Yemek", value: 1200, color: .orange),
-                    ChartSegment(name: "Kira", value: 2500, color: .blue),
-                    ChartSegment(name: "Faturalar", value: 800, color: .red),
-                    ChartSegment(name: "Eğlence", value: 550, color: .purple),
-                    ChartSegment(name: "Alışveriş", value: 450, color: .pink)
+                    AnalysisChartSegment(name: "Yemek", value: 1200, color: .orange),
+                    AnalysisChartSegment(name: "Kira", value: 2500, color: .blue),
+                    AnalysisChartSegment(name: "Faturalar", value: 800, color: .red),
+                    AnalysisChartSegment(name: "Eğlence", value: 550, color: .purple),
+                    AnalysisChartSegment(name: "Alışveriş", value: 450, color: .pink)
                 ],
                 title: "₺4,500",
                 subtitle: "Toplam"

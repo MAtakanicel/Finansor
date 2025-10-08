@@ -23,19 +23,19 @@ class KeyboardResponder: ObservableObject {
 
 struct RegisterFinalView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var email: String = ""
+    @EnvironmentObject private var userViewModel: UserViewModel
     @State private var password: String = ""
+    @State private var confirmPassword: String = ""
     @State private var showPassword: Bool = false
     @State private var showingAlert: Bool = false
     @State private var alertMessage: String = ""
-    @State private var isRegistering: Bool = false
     @State private var showCompletionSheet: Bool = false
     @State private var showLoginView: Bool = false
     @StateObject private var keyboard = KeyboardResponder()
     
     var body: some View {
         ZStack {
-            AppColors.backgroundDark.ignoresSafeArea()
+            FinansorColors.backgroundDark.ignoresSafeArea()
             
             VStack(spacing: 20) {
                 // Üst kısım - Geri butonu
@@ -64,7 +64,7 @@ struct RegisterFinalView: View {
                         .padding(.leading, 20)
                         .padding(.trailing, 20)
                     
-                    Text("Hesabınızı oluşturmak için e-posta ve parola girin")
+                    Text("Hesabınızı oluşturmak için parola belirleyin")
                         .font(.body)
                         .foregroundColor(.white.opacity(0.8))
                         .multilineTextAlignment(.center)
@@ -75,14 +75,12 @@ struct RegisterFinalView: View {
                 
                 // Form alanları
                 VStack(spacing: 20) {
-                    // E-posta
-                    TextField("E-posta", text: $email)
+                    // E-posta (readonly)
+                    TextField("", text: .constant(userViewModel.tempEmail))
                         .font(.title3)
-                        .foregroundColor(.white)
-                        .textFieldStyle(CustomTextFieldStyle())
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                        .padding(.bottom, 5)
+                        .foregroundColor(.white.opacity(0.7))
+                        .textFieldStyle(FinansorTextFieldStyle())
+                        .disabled(true)
                         .frame(height: 50)
                         .background(
                             ZStack {
@@ -93,7 +91,7 @@ struct RegisterFinalView: View {
                                 
                                 // Arkaplan
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white.opacity(0.15))
+                                    .fill(Color.white.opacity(0.1))
                             }
                         )
                         .overlay(
@@ -109,7 +107,7 @@ struct RegisterFinalView: View {
                             TextField("Parola", text: $password)
                                 .font(.title3)
                                 .foregroundColor(.white)
-                                .textFieldStyle(CustomTextFieldStyle())
+                                .textFieldStyle(FinansorTextFieldStyle())
                                 .autocapitalization(.none)
                                 .disableAutocorrection(true)
                                 .padding(.bottom, 5)
@@ -136,7 +134,7 @@ struct RegisterFinalView: View {
                             SecureField("Parola", text: $password)
                                 .font(.title3)
                                 .foregroundColor(.white)
-                                .textFieldStyle(CustomTextFieldStyle())
+                                .textFieldStyle(FinansorTextFieldStyle())
                                 .padding(.bottom, 5)
                                 .frame(height: 50)
                                 .background(
@@ -167,6 +165,63 @@ struct RegisterFinalView: View {
                         }
                         .padding(.trailing, 30)
                     }
+                    
+                    // Confirm Password
+                    ZStack(alignment: .trailing) {
+                        if showPassword {
+                            TextField("Parolayı Tekrarla", text: $confirmPassword)
+                                .font(.title3)
+                                .foregroundColor(.white)
+                                .textFieldStyle(FinansorTextFieldStyle())
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding(.bottom, 5)
+                                .frame(height: 50)
+                                .background(
+                                    ZStack {
+                                        // Gölge
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.black.opacity(0.2))
+                                            .offset(y: 2)
+                                        
+                                        // Arkaplan
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.white.opacity(0.15))
+                                    }
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                )
+                                .padding(.leading, 20)
+                                .padding(.trailing, 20)
+                        } else {
+                            SecureField("Parolayı Tekrarla", text: $confirmPassword)
+                                .font(.title3)
+                                .foregroundColor(.white)
+                                .textFieldStyle(FinansorTextFieldStyle())
+                                .padding(.bottom, 5)
+                                .frame(height: 50)
+                                .background(
+                                    ZStack {
+                                        // Gölge
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.black.opacity(0.2))
+                                            .offset(y: 2)
+                                        
+                                        // Arkaplan
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.white.opacity(0.15))
+                                    }
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                )
+                                .padding(.leading, 20)
+                                .padding(.trailing, 20)
+                        }
+                    }
                 }
                 
                 // Şifre gücü göstergesi
@@ -194,9 +249,16 @@ struct RegisterFinalView: View {
                     .padding(.top, 5)
                     
                     Text(passwordStrengthText)
-                        .foregroundColor(passwordStrength == .weak ? .red : .gray)
+                        .foregroundColor(passwordStrengthColor)
                         .font(.subheadline)
                         .padding(.leading, 20)
+                        
+                    if !passwordsMatch && !confirmPassword.isEmpty {
+                        Text("Parolalar eşleşmiyor")
+                            .foregroundColor(.red)
+                            .font(.subheadline)
+                            .padding(.leading, 20)
+                    }
                 }
                 
                 Spacer()
@@ -210,11 +272,12 @@ struct RegisterFinalView: View {
                         Button("Giriş Yap") {
                             showLoginView = true
                         }
-                        .foregroundColor(AppColors.accentYellow)
+                        .foregroundColor(FinansorColors.accentYellow)
                     }
                     .padding(.bottom, 20)
                     .fullScreenCover(isPresented: $showLoginView, content: {
                         LoginView()
+                            .environmentObject(userViewModel)
                     })
                 }
                 // Kayıt ol butonu
@@ -224,21 +287,21 @@ struct RegisterFinalView: View {
                 }) {
                     ZStack {
                         Circle()
-                            .fill(isFormValid ? AppColors.accentYellow : Color.gray.opacity(0.3))
+                            .fill(isFormValid ? FinansorColors.accentYellow : Color.gray.opacity(0.3))
                             .frame(width: 70, height: 70)
                         
-                        if isRegistering {
+                        if userViewModel.isLoading {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .black))
                                 .scaleEffect(1.5)
                         } else {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 30, weight: .bold))
-                                .foregroundColor(Color.backgroundDarkBlue)
+                                .foregroundColor(FinansorColors.BackwardCompatibility.backgroundDarkBlue)
                         }
                     }
                 }
-                .disabled(!isFormValid || isRegistering)
+                .disabled(!isFormValid || userViewModel.isLoading)
                 .padding(.bottom, 80)
             }
         }
@@ -246,7 +309,8 @@ struct RegisterFinalView: View {
             Button("Tamam", role: .cancel) {}
         }
         .sheet(isPresented: $showCompletionSheet) {
-            FinalCompletionSheetView(newUserMail: $email, newUserPassword: $password)
+            FinalCompletionSheetView()
+                .environmentObject(userViewModel)
                 .presentationDetents([.fraction(0.5)])
         }
    
@@ -294,54 +358,74 @@ struct RegisterFinalView: View {
         }
     }
     
+    private var passwordsMatch: Bool {
+        return password == confirmPassword
+    }
+    
     private var isFormValid: Bool {
-        !email.isEmpty &&
         !password.isEmpty &&
         password.count >= 6 &&
-        email.contains("@") && email.contains(".")
+        !confirmPassword.isEmpty &&
+        passwordsMatch
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
     private func registerUser() {
         if !isFormValid {
-            alertMessage = "Lütfen tüm alanları doğru şekilde doldurun."
+            if !passwordsMatch {
+                alertMessage = "Girdiğiniz parolalar eşleşmiyor."
+            } else if password.count < 6 {
+                alertMessage = "Parola en az 6 karakter uzunluğunda olmalıdır."
+            } else {
+                alertMessage = "Lütfen tüm alanları doğru şekilde doldurun."
+            }
             showingAlert = true
             return
         }
         
-        isRegistering = true
-        
-        // Kayıt işlemini simüle eder
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isRegistering = false
-            showCompletionSheet = true
+        // Use userViewModel to register the user
+        userViewModel.register(
+            name: "Kullanıcı", // This would be from previous steps
+            email: userViewModel.tempEmail,
+            password: password
+        ) { success, error in
+            if success {
+                showCompletionSheet = true
+            } else {
+                alertMessage = error ?? "Kayıt işlemi sırasında bir hata oluştu."
+                showingAlert = true
+            }
         }
     }
 }
 
 struct FinalCompletionSheetView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var newUserMail : String
-    @Binding var newUserPassword : String
+    @EnvironmentObject private var userViewModel: UserViewModel
     @State private var showMainTabView = false
     
     var body: some View {
-
         VStack(spacing: 20) {
             Image(systemName: "checkmark")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .padding(.top, 50)
-                
+                .foregroundColor(FinansorColors.accentYellow)
             
             Text("Kayıt Tamamlandı!")
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .foregroundColor(.white)
             
             Text("Hesabınız başarıyla oluşturuldu.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 30)
+                .foregroundColor(.white)
             
             Spacer()
             
@@ -351,7 +435,7 @@ struct FinalCompletionSheetView: View {
                 }) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
-                            .fill(AppColors.primaryBlue)
+                            .fill(FinansorColors.primaryBlue)
                             .frame(height: 50)
                             .padding(.horizontal,50)
                         
@@ -362,13 +446,15 @@ struct FinalCompletionSheetView: View {
                 }
                 .fullScreenCover(isPresented: $showMainTabView, content: {
                     MainTabView()
+                        .environmentObject(userViewModel)
                 })
-                
             }
         }
+        .background(FinansorColors.backgroundDark)
     }
 }
 
 #Preview {
     RegisterFinalView()
+        .environmentObject(UserViewModel())
 }
