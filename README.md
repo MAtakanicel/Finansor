@@ -1,5 +1,5 @@
 # Finansor
-
+### Bu proje Yazılım Mühendisliği dersi projem olarak yapılmıştır. Gerçek bir uygulama değildir.
 
 ## Proje Tanımı:
     Bu uygulama, kullanıcıların gelir ve giderlerini kolayca takip etmelerini sağlayan bir mobil uygulamadır. 
@@ -18,11 +18,8 @@
 ## Proje Ekibi:
     Mehmet Atakan İçel
 
-
 1.[Gereksinim Analizi](Gereksinim-Analizi.md) <br>
 2.[Durum Diyagram](Durum-Diyagrami.md) <br>
 3.[Durum Senaryoları](DurumSenaryolari.md) <br>
-6.[Sunum](Sunum.md) <br>
 
 
-# Bu proje Yazılım Mühendisliği dersi projem olarak yapılmıştır. Gerçek bir uygulama değildir.
