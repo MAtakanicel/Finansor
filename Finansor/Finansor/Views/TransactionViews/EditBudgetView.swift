@@ -2,17 +2,17 @@ import SwiftUI
 
 struct EditBudgetView: View {
     @Binding var isPresented: Bool
-    @Binding var budgets: [Budget]
-    var budget: Budget
+    @Binding var budgets: [FinansorBudget]
+    var budget: FinansorBudget
     
     @State private var name: String
     @State private var amount: String
-    @State private var category: BudgetCategory
-    @State private var period: BudgetPeriod
+    @State private var category: FinansorBudgetCategory
+    @State private var period: FinansorBudgetPeriod
     @State private var startDate: Date
     @State private var spent: String
     
-    init(isPresented: Binding<Bool>, budgets: Binding<[Budget]>, budget: Budget) {
+    init(isPresented: Binding<Bool>, budgets: Binding<[FinansorBudget]>, budget: FinansorBudget) {
         self._isPresented = isPresented
         self._budgets = budgets
         self.budget = budget
@@ -57,7 +57,7 @@ struct EditBudgetView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 15) {
-                                ForEach(BudgetCategory.allCases) { cat in
+                                ForEach(FinansorBudgetCategory.allCases) { cat in
                                     VStack {
                                         ZStack {
                                             Circle()
@@ -133,7 +133,7 @@ struct EditBudgetView: View {
                                     .foregroundColor(AppColors.textDark)
                                 
                                 Picker("", selection: $period) {
-                                    ForEach(BudgetPeriod.allCases) { period in
+                                    ForEach(FinansorBudgetPeriod.allCases) { period in
                                         Text(period.rawValue).tag(period)
                                     }
                                 }
@@ -206,8 +206,8 @@ struct EditBudgetView: View {
         }
         
         if let index = budgets.firstIndex(where: { $0.id == budget.id }) {
-            budgets[index] = Budget(
-                id: budget.id,  //İsmi tut
+            budgets[index] = FinansorBudget(
+                id: budget.id,
                 name: name,
                 amount: amountValue,
                 spent: spentValue,
@@ -234,7 +234,7 @@ struct EditBudgetView_Previews: PreviewProvider {
         EditBudgetView(
             isPresented: .constant(true),
             budgets: .constant([]),
-            budget: Budget(
+            budget: FinansorBudget(
                 id: UUID(),
                 name: "Aylık Yemek Bütçesi",
                 amount: 1200,

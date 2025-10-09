@@ -23,6 +23,7 @@ class UserViewModel: ObservableObject {
         // kullanıcının oturum durumunu kontrol edebilirsiniz
         // Şimdilik sadece demo kullanıcı yüklüyoruz
         loadDemoUser()
+        isAuthenticated = true
     }
     
     // E-posta ve şifre ile giriş

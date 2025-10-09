@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BudgetRowDetail: View {
-    var budget: Budget
+    var budget: FinansorBudget
     var editAction: () -> Void
     var deleteAction: () -> Void
     

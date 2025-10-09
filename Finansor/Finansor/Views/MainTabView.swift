@@ -22,7 +22,7 @@ struct MainTabView: View {
                 .tag(0)
             
             // Transactions Tab
-            Text("İşlemler")
+            TransactionTabView()
                 .tabItem {
                     Image(systemName: "arrow.left.arrow.right")
                     Text("İşlemler")
@@ -39,7 +39,7 @@ struct MainTabView: View {
                 .tag(2)
             
             // Budget Tab
-            Text("Bütçe")
+            BudgetsView()
                 .tabItem {
                     Image(systemName: "banknote.fill")
                     Text("Bütçe")
@@ -47,7 +47,7 @@ struct MainTabView: View {
                 .tag(3)
             
             // Profile Tab
-            Text("Profil")
+            SettingsTabView()
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Profil")

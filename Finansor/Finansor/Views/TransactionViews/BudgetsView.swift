@@ -1,118 +1,10 @@
 import SwiftUI
 
-struct Budget: Identifiable {
-    var id = UUID()
-    var name: String
-    var amount: Double
-    var spent: Double
-    var category: BudgetCategory
-    var period: BudgetPeriod
-    var startDate: Date
-    var endDate: Date
-}
-
-enum BudgetCategory: String, CaseIterable, Identifiable {
-    case food = "Yemek"
-    case transportation = "Ulaşım"
-    case entertainment = "Eğlence"
-    case shopping = "Alışveriş"
-    case housing = "Konut"
-    case utilities = "Faturalar"
-    case health = "Sağlık"
-    case education = "Eğitim"
-    case other = "Diğer"
-    
-    var id: String { self.rawValue }
-    
-    var icon: String {
-        switch self {
-        case .food: return "fork.knife"
-        case .transportation: return "car.fill"
-        case .entertainment: return "film.fill"
-        case .shopping: return "cart.fill"
-        case .housing: return "house.fill"
-        case .utilities: return "bolt.fill"
-        case .health: return "heart.fill"
-        case .education: return "book.fill"
-        case .other: return "square.grid.2x2.fill"
-        }
-    }
-    
-    var color: Color {
-        switch self {
-        case .food: return .orange
-        case .transportation: return .blue
-        case .entertainment: return .purple
-        case .shopping: return .pink
-        case .housing: return AppColors.expense
-        case .utilities: return .yellow
-        case .health: return .red
-        case .education: return .green
-        case .other: return .gray
-        }
-    }
-}
-
-enum BudgetPeriod: String, CaseIterable, Identifiable {
-    case weekly = "Haftalık"
-    case monthly = "Aylık"
-    case half = "6 Aylık"
-    case yearly = "Yıllık"
-    
-    var id: String { self.rawValue }
-}
-
 struct BudgetsView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var budgets: [Budget] = [
-        Budget(
-            name: "Markete Harcama",
-            amount: 2000,
-            spent: 1200,
-            category: .food,
-            period: .monthly,
-            startDate: Calendar.current.date(byAdding: .day, value: -10, to: Date())!,
-            endDate: Calendar.current.date(byAdding: .day, value: 20, to: Date())!
-        ),
-        Budget(
-            name: "Yakıt",
-            amount: 1500,
-            spent: 800,
-            category: .transportation,
-            period: .monthly,
-            startDate: Calendar.current.date(byAdding: .day, value: -10, to: Date())!,
-            endDate: Calendar.current.date(byAdding: .day, value: 20, to: Date())!
-        ),
-        Budget(
-            name: "Eğlence",
-            amount: 1000,
-            spent: 950,
-            category: .entertainment,
-            period: .monthly,
-            startDate: Calendar.current.date(byAdding: .day, value: -10, to: Date())!,
-            endDate: Calendar.current.date(byAdding: .day, value: 20, to: Date())!
-        ),
-        Budget(
-            name: "Kıyafet",
-            amount: 800,
-            spent: 600,
-            category: .shopping,
-            period: .monthly,
-            startDate: Calendar.current.date(byAdding: .day, value: -10, to: Date())!,
-            endDate: Calendar.current.date(byAdding: .day, value: 20, to: Date())!
-        ),
-        Budget(
-            name: "Faturalar",
-            amount: 1200,
-            spent: 1100,
-            category: .utilities,
-            period: .monthly,
-            startDate: Calendar.current.date(byAdding: .day, value: -10, to: Date())!,
-            endDate: Calendar.current.date(byAdding: .day, value: 20, to: Date())!
-        )
-    ]
+    @EnvironmentObject private var budgetViewModel: BudgetViewModel
     
-    @State private var selectedPeriod: BudgetPeriod = .monthly
+    @State private var selectedPeriod: FinansorBudgetPeriod = .monthly
     @State private var showingAddBudget = false
     @State private var editBudget: Budget? = nil
     @State private var showingDeleteAlert = false
@@ -120,15 +12,15 @@ struct BudgetsView: View {
     @State private var showChartView = true
     
     var totalBudget: Double {
-        budgets.reduce(0) { $0 + $1.amount }
+        budgetViewModel.budgets.reduce(0) { $0 + $1.amount }
     }
     
     var totalSpent: Double {
-        budgets.reduce(0) { $0 + $1.spent }
+        budgetViewModel.budgets.reduce(0) { $0 + $1.spent }
     }
     
     var pieChartSegments: [ChartSegment] {
-        let categoryBudgets = Dictionary(grouping: budgets, by: { $0.category })
+        let categoryBudgets = Dictionary(grouping: budgetViewModel.budgets, by: { $0.category })
             .mapValues { budgets in
                 budgets.reduce(0) { $0 + $1.amount }
             }
@@ -156,7 +48,7 @@ struct BudgetsView: View {
                                     .font(.subheadline)
                                     .foregroundColor(AppColors.secondaryTextDark)
                                 
-                                Text("₺\(totalBudget, specifier: "%.2f")")
+                                Text(totalBudget.asTRY)
                                     .font(.title3)
                                     .fontWeight(.bold)
                                     .foregroundColor(AppColors.textDark)
@@ -169,7 +61,7 @@ struct BudgetsView: View {
                                     .font(.subheadline)
                                     .foregroundColor(AppColors.secondaryTextDark)
                                 
-                                Text("₺\(totalSpent, specifier: "%.2f")")
+                                Text(totalSpent.asTRY)
                                     .font(.title3)
                                     .fontWeight(.bold)
                                     .foregroundColor(progressColor(spent: totalSpent, total: totalBudget))
@@ -185,7 +77,7 @@ struct BudgetsView: View {
                                 .cornerRadius(4)
                             
                             HStack {
-                                Text("Kalan Bütçe: ₺\(max(0, totalBudget - totalSpent), specifier: "%.2f")")
+                                Text("Kalan Bütçe: \(max(0, totalBudget - totalSpent).asTRY)")
                                     .font(.caption)
                                     .foregroundColor(AppColors.secondaryTextDark)
                                 
@@ -249,7 +141,7 @@ struct BudgetsView: View {
                     }
                     
                     // Bütçe Listesi
-                    ForEach(budgets) { budget in
+                    ForEach(budgetViewModel.budgets) { budget in
                         BudgetRowDetail(budget: budget, editAction: {
                             editBudget = budget
                         }, deleteAction: {
@@ -292,13 +184,13 @@ struct BudgetsView: View {
             }
         }
         .sheet(isPresented: $showingAddBudget) {
-            AddBudgetView(isPresented: $showingAddBudget, budgets: $budgets)
+            AddBudgetView(isPresented: $showingAddBudget, budgets: $budgetViewModel.budgets)
         }
         .sheet(item: $editBudget) { budget in
             EditBudgetView(isPresented: Binding(
                 get: { editBudget != nil },
                 set: { if !$0 { editBudget = nil } }
-            ), budgets: $budgets, budget: budget)
+            ), budgets: $budgetViewModel.budgets, budget: budget)
         }
         .alert(isPresented: $showingDeleteAlert) {
             Alert(
@@ -306,8 +198,8 @@ struct BudgetsView: View {
                 message: Text("Bu bütçeyi silmek istediğinizden emin misiniz?"),
                 primaryButton: .destructive(Text("Sil")) {
                     if let budget = budgetToDelete,
-                       let index = budgets.firstIndex(where: { $0.id == budget.id }) {
-                        budgets.remove(at: index)
+                       let index = budgetViewModel.budgets.firstIndex(where: { $0.id == budget.id }) {
+                        budgetViewModel.budgets.remove(at: index)
                     }
                 },
                 secondaryButton: .cancel(Text("İptal"))
@@ -340,7 +232,7 @@ struct BudgetsView: View {
 }
 
 struct BudgetCard: View {
-    let budget: Budget
+    let budget: FinansorBudget
     
     var body: some View {
         VStack(spacing: 15) {
@@ -390,7 +282,7 @@ struct BudgetCard: View {
                     .cornerRadius(4)
                 
                 HStack {
-                    Text("₺\(budget.spent, specifier: "%.2f") / ₺\(budget.amount, specifier: "%.2f")")
+                    Text("\(budget.spent.asTRY) / \(budget.amount.asTRY)")
                         .font(.caption)
                         .foregroundColor(AppColors.secondaryTextDark)
                     
@@ -433,12 +325,12 @@ struct BudgetCard: View {
 
 struct AddBudgetView: View {
     @Binding var isPresented: Bool
-    @Binding var budgets: [Budget]
+    @Binding var budgets: [FinansorBudget]
     
     @State private var name = ""
     @State private var amount = ""
-    @State private var category: BudgetCategory = .food
-    @State private var period: BudgetPeriod = .monthly
+    @State private var category: FinansorBudgetCategory = .food
+    @State private var period: FinansorBudgetPeriod = .monthly
     @State private var startDate = Date()
     
     var endDate: Date {
@@ -473,7 +365,7 @@ struct AddBudgetView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 15) {
-                                ForEach(BudgetCategory.allCases) { cat in
+                                ForEach(FinansorBudgetCategory.allCases) { cat in
                                     VStack {
                                         ZStack {
                                             Circle()
@@ -535,7 +427,7 @@ struct AddBudgetView: View {
                                     .foregroundColor(AppColors.textDark)
                                 
                                 Picker("", selection: $period) {
-                                    ForEach(BudgetPeriod.allCases) { period in
+                                    ForEach(FinansorBudgetPeriod.allCases) { period in
                                         Text(period.rawValue).tag(period)
                                     }
                                 }
@@ -593,17 +485,13 @@ struct AddBudgetView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Kaydet") {
                         guard let amountValue = Double(amount) else { return }
-                        
-                        let newBudget = Budget(
+                        let newBudget = FinansorBudget.create(
                             name: name,
                             amount: amountValue,
-                            spent: 0,
                             category: category,
                             period: period,
-                            startDate: startDate,
-                            endDate: endDate
+                            startDate: startDate
                         )
-                        
                         budgets.append(newBudget)
                         isPresented = false
                     }

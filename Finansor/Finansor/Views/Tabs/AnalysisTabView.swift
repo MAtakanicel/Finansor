@@ -85,15 +85,13 @@ struct AnalysisTabView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.horizontal)
                                     
-                                    // Chart placeholder
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(Color.gray.opacity(0.2))
-                                        
-                                        Text("Gider Grafiği")
-                                            .foregroundColor(.white)
-                                    }
-                                    .frame(height: 250)
+                                    DonutChartView(
+                                        segments: analysisViewModel.expenseByCategory(),
+                                        width: 260,
+                                        innerRadiusFraction: 0.62,
+                                        title: summary.formattedTotalExpense,
+                                        subtitle: summary.period
+                                    )
                                     .padding(.horizontal)
                                 } else {
                                     Text("Gelirler")
@@ -102,15 +100,13 @@ struct AnalysisTabView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.horizontal)
                                     
-                                    // Chart placeholder
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(Color.gray.opacity(0.2))
-                                        
-                                        Text("Gelir Grafiği")
-                                            .foregroundColor(.white)
-                                    }
-                                    .frame(height: 250)
+                                    DonutChartView(
+                                        segments: analysisViewModel.incomeByCategory(),
+                                        width: 260,
+                                        innerRadiusFraction: 0.62,
+                                        title: summary.formattedTotalIncome,
+                                        subtitle: summary.period
+                                    )
                                     .padding(.horizontal)
                                 }
                                 

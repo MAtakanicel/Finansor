@@ -16,14 +16,21 @@ class CategoryViewModel: ObservableObject {
     private let storageService = DataStorageService.shared
     
     init() {
-        // Load default categories
-        loadDefaultCategories()
+        // Kaydedilmiş kategorileri yüklemeyi dene, yoksa varsayılanları yükle
+        if let saved: [FinansorExpenseCategory] = storageService.load(forKey: .categories) {
+            // Kaydedilmiş kategorileri gelir/gider olarak ayır
+            let incomes = saved.filter { $0.isIncome }
+            let expenses = saved.filter { !$0.isIncome }
+            incomeCategories = incomes
+            expenseCategories = expenses
+        } else {
+            loadDefaultCategories()
+        }
         
-        // Kategorilerde değişiklik olduğunda gelir/gider listesini güncelle
-        $expenseCategories
-            .sink { [weak self] categories in
-                self?.updateSeparatedLists(allCategories: categories)
-                self?.saveCategories() // Kategorileri kaydet
+        // Kategorilerde değişiklik olduğunda kaydet
+        Publishers.CombineLatest($expenseCategories, $incomeCategories)
+            .sink { [weak self] (expenses, incomes) in
+                self?.saveCategories(all: expenses + incomes)
             }
             .store(in: &cancellables)
     }
@@ -40,8 +47,8 @@ class CategoryViewModel: ObservableObject {
     }
     
     // Kategorileri kaydet
-    private func saveCategories() {
-        storageService.save(expenseCategories, forKey: .categories)
+    private func saveCategories(all: [FinansorExpenseCategory]) {
+        storageService.save(all, forKey: .categories)
     }
     
     // MARK: - Public Methods
@@ -52,6 +59,28 @@ class CategoryViewModel: ObservableObject {
             incomeCategories.append(category)
         } else {
             expenseCategories.append(category)
+        }
+    }
+
+    // Set monthly income for salary category and reset others
+    func setSalaryMonthlyIncome(_ amount: Double) {
+        // Update salary category (Maaş)
+        if let index = incomeCategories.firstIndex(where: { $0.name == FinansorCategoryType.salary.rawValue }) {
+            var salary = incomeCategories[index]
+            salary.monthlyIncome = amount
+            incomeCategories[index] = salary
+        } else if !incomeCategories.isEmpty {
+            // Fallback: set first income category
+            var first = incomeCategories[0]
+            first.monthlyIncome = amount
+            incomeCategories[0] = first
+        }
+        
+        // Reset other income categories to avoid double counting
+        for i in 0..<incomeCategories.count {
+            if incomeCategories[i].name != FinansorCategoryType.salary.rawValue {
+                incomeCategories[i].monthlyIncome = 0
+            }
         }
     }
     

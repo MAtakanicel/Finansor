@@ -9,17 +9,29 @@ class BudgetViewModel: ObservableObject {
     
     private var transactionViewModel: TransactionViewModel
     private var cancellables = Set<AnyCancellable>()
+    private let storageService = DataStorageService.shared
     
     init(transactionViewModel: TransactionViewModel) {
         self.transactionViewModel = transactionViewModel
         
-        // Load sample budgets for demo
-        loadSampleBudgets()
+        // Kaydedilmiş bütçeleri yüklemeyi dene, yoksa örnekleri yükle
+        if let saved: [FinansorBudget] = storageService.load(forKey: .budgets) {
+            budgets = saved
+        } else {
+            loadSampleBudgets()
+        }
         
         // Subscribe to transaction changes to update budget spending
         transactionViewModel.$transactions
             .sink { [weak self] transactions in
                 self?.updateBudgetSpending(with: transactions)
+            }
+            .store(in: &cancellables)
+
+        // Bütçeler değiştiğinde kaydet
+        $budgets
+            .sink { [weak self] budgets in
+                self?.storageService.save(budgets, forKey: .budgets)
             }
             .store(in: &cancellables)
     }

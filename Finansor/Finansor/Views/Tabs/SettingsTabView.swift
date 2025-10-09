@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SettingsTabView: View {
+    @EnvironmentObject private var userViewModel: UserViewModel
     @State private var isDarkMode: Bool = true
     @State private var isNotificationsEnabled: Bool = true
     @State private var selectedCurrency: Currency = .try
@@ -184,6 +185,15 @@ struct SettingsTabView: View {
                             ) {
                                 // Yardım ve Destek Ekranı
                             }
+                            
+                            // Debug Testleri
+                            SettingsNavigationRow(
+                                title: "Debug Testleri",
+                                icon: "wrench.and.screwdriver.fill",
+                                iconColor: .orange
+                            ) {
+                                DebugTestsView()
+                            }
                         }
                         
                         // Çıkış Yap
@@ -223,14 +233,13 @@ struct SettingsTabView: View {
                     title: Text("Çıkış Yap"),
                     message: Text("Uygulamadan çıkış yapmak istediğinize emin misiniz?"),
                     primaryButton: .destructive(Text("Çıkış Yap")) {
-                        showWelcomeView.toggle()
+                        userViewModel.logout {
+                            // FinansorApp içinde isAuthenticated false olduğunda WelcomeView zaten gösterilecek
+                        }
                     },
                     secondaryButton: .cancel(Text("İptal"))
                 )
             }
-            .fullScreenCover(isPresented: $showWelcomeView, content: {
-                WelcomeView()
-            })
         }
     }
 }

@@ -14,3 +14,22 @@ struct AppConstants {
         static let notificationsEnabledKey = "notificationsEnabled"
     }
 } 
+
+// MARK: - Formatting Helpers
+extension NumberFormatter {
+    static let tryCurrency: NumberFormatter = {
+        let f = NumberFormatter()
+        f.locale = Locale(identifier: "tr_TR")
+        f.numberStyle = .currency
+        f.currencyCode = "TRY"
+        f.maximumFractionDigits = 0
+        f.minimumFractionDigits = 0
+        return f
+    }()
+}
+
+extension Double {
+    var asTRY: String {
+        NumberFormatter.tryCurrency.string(from: NSNumber(value: self)) ?? "₺\(Int(self))"
+    }
+}

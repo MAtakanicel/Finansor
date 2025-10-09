@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RegisterIncomeView: View {
+    @EnvironmentObject private var categoryViewModel: CategoryViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var currentStep = 5
     @State private var income: String = ""
@@ -123,6 +124,8 @@ struct RegisterIncomeView: View {
                     }*/
                     
                     let final = convertedMoney
+                    // Maaş kategorisine aylık geliri uygula ve diğer gelirleri sıfırla
+                    categoryViewModel.setSalaryMonthlyIncome(final)
                     showRegisterOptions.toggle()
                     
                 }) {
